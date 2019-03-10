@@ -44,6 +44,9 @@ def coevent_copts(is_3rd_party=False):
       "-std=c++2a",
   ]
 
+def coevent_linkopts():
+  return [
+  ]
 
 def coevent_include_prefix(path):
     if path.startswith('src/') or path.startswith('include/'):
@@ -68,7 +71,7 @@ def coevent_cc_library(name,
       srcs = srcs + private_hdrs,
       hdrs = hdrs,
       copts = coevent_include_copts() + coevent_copts(is_3rd_party) + copts,
-      linkopts = linkopts,
+      linkopts = coevent_linkopts() + linkopts,
       includes = includes,
       deps = external_deps + deps,
       data = data,
@@ -92,7 +95,7 @@ def coevent_cc_binary(name,
       name = name,
       srcs = srcs,
       copts = coevent_include_copts() + coevent_copts(is_3rd_party) + copts,
-      linkopts = linkopts,
+      linkopts = coevent_linkopts() + linkopts,
       includes = includes,
       deps = external_deps + deps,
       data = data,
