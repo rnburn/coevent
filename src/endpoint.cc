@@ -1,8 +1,10 @@
 #include "coevent/endpoint.h"
 
 #include <cstring>
+#include <exception>
 #include <stdexcept>
 #include <sstream>
+#include <iostream>
 
 #include <arpa/inet.h>
 
@@ -30,6 +32,20 @@ endpoint::endpoint(const char* s, uint16_t port) {
   std::ostringstream oss;
   oss << "failed to construct IpAddress from " << s;
   throw std::runtime_error{oss.str()};
+}
+
+//--------------------------------------------------------------------------------------------------
+// length
+//--------------------------------------------------------------------------------------------------
+size_t endpoint::length() const noexcept {
+  switch (this->family()) {
+    case AF_INET:
+      return sizeof(sockaddr_in);
+    case AF_INET6:
+      return sizeof(sockaddr_in6);
+  }
+  std::cerr << "unknown family\n";
+  std::terminate();
 }
 
 //--------------------------------------------------------------------------------------------------

@@ -18,6 +18,9 @@ class endpoint {
    operator const sockaddr&() const noexcept {
      return reinterpret_cast<const sockaddr&>(data_);
    }
+
+   size_t length() const noexcept;
+
  private:
    ::sockaddr_storage data_{};
 

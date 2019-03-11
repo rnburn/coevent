@@ -11,5 +11,8 @@ coevent_cc_library(
     hdrs = glob(["include/coevent/*.h"]),
     srcs = glob(["src/*.cc", "src/coevent/*.h"]),
     strip_include_prefix = "include",
+    external_deps = [
+        "@com_github_libevent_libevent//:libevent",
+    ],
 )
 
