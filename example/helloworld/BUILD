@@ -10,6 +10,6 @@ coevent_cc_binary(
     name = "hello",
     srcs = ["main.cc"],
     deps = [
-        "//include/coevent:task_lib",
+        "//:coevent_lib",
     ],
 )

@@ -141,6 +141,6 @@ def coevent_catch_test(
         data = data,
         linkopts = linkopts,
         visibility = visibility,
-        deps = deps,
+        deps = deps + ["//:coevent_lib"],
         external_deps = external_deps + ["//3rd_party/catch2:main_lib"],
     )

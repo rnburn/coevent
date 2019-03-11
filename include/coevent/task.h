@@ -4,16 +4,16 @@
 
 namespace coevent {
 template <class T>
-class TaskPromise;
+class task_promise;
 
 template <class T>
-class Task {
+class task {
  public:
-   using promise_type = TaskPromise<T>;
+   using promise_type = task_promise<T>;
 
-   Task() noexcept = default;
+   task() noexcept = default;
 
-   Task(std::experimental::coroutine_handle<> coroutine) noexcept
+   task(std::experimental::coroutine_handle<> coroutine) noexcept
      : coroutine_{coroutine}
    {}
 
@@ -25,10 +25,10 @@ class Task {
 };
 
 template <class T>
-class TaskPromise {
+class task_promise {
  public:
-   Task<T> get_return_object() {
-     return Task<T>{std::experimental::coroutine_handle<TaskPromise>::from_promise(*this)};
+   task<T> get_return_object() {
+     return task<T>{std::experimental::coroutine_handle<task_promise>::from_promise(*this)};
    }
 
    auto initial_suspend() noexcept {

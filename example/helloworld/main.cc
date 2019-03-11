@@ -2,7 +2,7 @@
 
 #include "coevent/task.h"
 
-coevent::Task<int> f() {
+coevent::task<int> f() {
   std::cout << "arf" << std::endl;
   co_return 22;
 }
