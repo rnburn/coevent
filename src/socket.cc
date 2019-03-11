@@ -87,7 +87,9 @@ void socket::connect(const coevent::endpoint& endpoint) {
   }
   set_nonblocking(file_descriptor_);
   set_reuse_address(file_descriptor_);
-  auto rcode = ::connect(file_descriptor_, &static_cast<const sockaddr&>(endpoint), endpoint.length());
+  auto rcode =
+      ::connect(file_descriptor_, &static_cast<const sockaddr&>(endpoint),
+                endpoint.length());
   if (rcode == -1 && errno != EINPROGRESS) {
     std::ostringstream oss;
     oss << "connect failed: " << std::strerror(errno);
