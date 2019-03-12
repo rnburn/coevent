@@ -5,6 +5,10 @@
 namespace coevent {
 class event {
  public:
+   static const short write;
+
+   static const short read;
+
    using handle_type = void*;
 
    using callback_type = void (*)(int file_descriptor, short what, void* context) noexcept;
