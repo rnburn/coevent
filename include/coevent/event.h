@@ -5,9 +5,10 @@
 namespace coevent {
 class event {
  public:
-   static const short write;
-
-   static const short read;
+  struct what {
+    static const short write;
+    static const short read;
+  };
 
    using handle_type = void*;
 
