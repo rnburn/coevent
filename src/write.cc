@@ -12,10 +12,14 @@ namespace coevent {
 //--------------------------------------------------------------------------------------------------
 write_result::write_result(coevent::socket& socket, std::span<const char> data,
                            size_t num_written) noexcept
-    : socket_{socket}, data_{data}, num_written_{num_written} {
-      (void)socket_;
-      (void)data_;
-    }
+    : socket_{socket}, data_{data}, num_written_{num_written} {}
+
+//--------------------------------------------------------------------------------------------------
+// operator co_await
+//--------------------------------------------------------------------------------------------------
+write_awaiter write_result::operator co_await() const noexcept {
+  return {socket_, data_, num_written_};
+}
 
 //--------------------------------------------------------------------------------------------------
 // write
