@@ -17,6 +17,12 @@ class task {
      : coroutine_{coroutine}
    {}
 
+   ~task() noexcept {
+     if (coroutine_ != nullptr) {
+       coroutine_.destroy();
+     }
+   }
+
    std::experimental::coroutine_handle<> coroutine() const noexcept {
       return coroutine_;
    }
