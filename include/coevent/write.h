@@ -7,7 +7,7 @@
 #include "coevent/write_awaiter.h"
 
 namespace coevent {
-class write_result {
+class [[nodiscard]] write_result {
  public:
    write_result(coevent::socket& socket, std::span<const char> data, size_t num_written) noexcept;
 
