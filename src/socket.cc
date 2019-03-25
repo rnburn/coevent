@@ -73,6 +73,9 @@ socket::~socket() noexcept {
 // operator=
 //--------------------------------------------------------------------------------------------------
 socket& socket::operator=(socket&& other) noexcept {
+  if (&other == this) {
+    return *this;
+  }
   free();
   file_descriptor_ = other.file_descriptor_;
   other.file_descriptor_ = -1;

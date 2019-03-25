@@ -34,6 +34,9 @@ io_context::~io_context() noexcept {
 // operator=
 //--------------------------------------------------------------------------------------------------
 io_context& io_context::operator=(io_context&& other) noexcept {
+  if (&other == this) {
+    return *this;
+  }
   free();
   handle_ = other.handle_;
   other.handle_ = nullptr;

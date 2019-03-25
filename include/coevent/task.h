@@ -37,12 +37,12 @@ class task_promise {
      return task<T>{std::experimental::coroutine_handle<task_promise>::from_promise(*this)};
    }
 
-   auto initial_suspend() noexcept {
-     return std::experimental::suspend_always{};
+   std::experimental::suspend_always initial_suspend() noexcept {
+     return {};
    }
 
-   auto final_suspend() noexcept {
-     return std::experimental::suspend_always{};
+   std::experimental::suspend_always final_suspend() noexcept {
+     return {};
    }
 
    template <class U>

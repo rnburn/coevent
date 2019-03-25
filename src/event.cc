@@ -41,6 +41,9 @@ event::~event() noexcept {
 // operator=
 //--------------------------------------------------------------------------------------------------
 event& event::operator=(event&& other) noexcept {
+  if (&other == this){ 
+    return *this;
+  }
   free();
   handle_ = other.handle_;
   other.handle_ = nullptr;
