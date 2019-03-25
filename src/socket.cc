@@ -109,4 +109,29 @@ void socket::free() noexcept {
     ::close(file_descriptor_);
   }
 }
+
+//--------------------------------------------------------------------------------------------------
+// bind
+//--------------------------------------------------------------------------------------------------
+void bind(coevent::socket& socket, const coevent::endpoint& endpoint) {
+  auto rcode =
+      ::bind(socket.file_descriptor(), &static_cast<const sockaddr&>(endpoint), endpoint.length());
+  if (rcode == -1) {
+    std::ostringstream oss;
+    oss << "bind failed: " << std::strerror(errno);
+    throw std::runtime_error{oss.str()};
+  }
+}
+
+//--------------------------------------------------------------------------------------------------
+// listen
+//--------------------------------------------------------------------------------------------------
+void listen(coevent::socket& socket, int backlog) {
+  auto rcode = ::listen(socket.file_descriptor(), backlog);
+  if (rcode == -1) {
+    std::ostringstream oss;
+    oss << "listen failed: " << std::strerror(errno);
+    throw std::runtime_error{oss.str()};
+  }
+}
 } // namespace coevent

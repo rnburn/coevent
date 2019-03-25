@@ -33,4 +33,8 @@ class socket {
 
    void free() noexcept;
 };
+
+void bind(coevent::socket& socket, const coevent::endpoint& endpoint);
+
+void listen(coevent::socket& socket, int backlog);
 } // namespace coevent
