@@ -10,6 +10,7 @@ class socket {
  public:
    explicit socket(coevent::io_context& io_context) noexcept;
    socket(coevent::io_context& io_context, const coevent::endpoint& endpoint);
+   socket(coevent::io_context& io_context, int file_descriptor) noexcept;
    socket(const socket&) = delete;
    socket(socket&& other) noexcept;
 

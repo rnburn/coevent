@@ -51,6 +51,10 @@ socket::socket(coevent::io_context& io_context, const coevent::endpoint& endpoin
   this->connect(endpoint);
 }
 
+socket::socket(coevent::io_context& io_context, int file_descriptor) noexcept
+  : io_context_{io_context}, file_descriptor_{file_descriptor}
+{}
+
 socket::socket(socket&& other) noexcept 
   : io_context_{other.io_context_},
     file_descriptor_{other.file_descriptor_}
