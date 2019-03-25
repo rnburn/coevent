@@ -83,14 +83,7 @@ socket& socket::operator=(socket&& other) noexcept {
 // connect
 //--------------------------------------------------------------------------------------------------
 void socket::connect(const coevent::endpoint& endpoint) {
-  file_descriptor_ = ::socket(endpoint.family(), SOCK_STREAM, 0);
-  if (file_descriptor_ == -1) {
-    std::ostringstream oss;
-    oss << "socket failed: " << std::strerror(errno);
-    throw std::runtime_error{oss.str()};
-  }
-  set_nonblocking(file_descriptor_);
-  set_reuse_address(file_descriptor_);
+  this->open(endpoint.family());
   auto rcode =
       ::connect(file_descriptor_, &static_cast<const sockaddr&>(endpoint),
                 endpoint.length());
@@ -102,24 +95,39 @@ void socket::connect(const coevent::endpoint& endpoint) {
 }
 
 //--------------------------------------------------------------------------------------------------
+// bind
+//--------------------------------------------------------------------------------------------------
+void socket::bind(const coevent::endpoint& endpoint) {
+  this->open(endpoint.family());
+  auto rcode = ::bind(file_descriptor_, &static_cast<const sockaddr&>(endpoint),
+                      endpoint.length());
+  if (rcode == -1) {
+    std::ostringstream oss;
+    oss << "bind failed: " << std::strerror(errno);
+    throw std::runtime_error{oss.str()};
+  }
+}
+
+//--------------------------------------------------------------------------------------------------
+// construct
+//--------------------------------------------------------------------------------------------------
+void socket::open(int family) {
+  file_descriptor_ = ::socket(family, SOCK_STREAM, 0);
+  if (file_descriptor_ == -1) {
+    std::ostringstream oss;
+    oss << "socket failed: " << std::strerror(errno);
+    throw std::runtime_error{oss.str()};
+  }
+  set_nonblocking(file_descriptor_);
+  set_reuse_address(file_descriptor_);
+}
+
+//--------------------------------------------------------------------------------------------------
 // free
 //--------------------------------------------------------------------------------------------------
 void socket::free() noexcept {
   if (file_descriptor_ != -1) {
     ::close(file_descriptor_);
-  }
-}
-
-//--------------------------------------------------------------------------------------------------
-// bind
-//--------------------------------------------------------------------------------------------------
-void bind(coevent::socket& socket, const coevent::endpoint& endpoint) {
-  auto rcode =
-      ::bind(socket.file_descriptor(), &static_cast<const sockaddr&>(endpoint), endpoint.length());
-  if (rcode == -1) {
-    std::ostringstream oss;
-    oss << "bind failed: " << std::strerror(errno);
-    throw std::runtime_error{oss.str()};
   }
 }
 

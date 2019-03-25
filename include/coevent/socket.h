@@ -27,9 +27,13 @@ class socket {
 
    void connect(const coevent::endpoint& endpoint);
 
+   void bind(const coevent::endpoint& endpoint);
+
  private:
    coevent::io_context& io_context_;
    int file_descriptor_{-1};
+
+   void open(int family);
 
    void free() noexcept;
 };
