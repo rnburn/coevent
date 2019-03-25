@@ -34,18 +34,4 @@ void socket_state_awaiter::on_state_change(int /*file_descriptor*/, short what,
   self.state_what_ = what;
   self.coroutine_.resume();
 }
-
-//--------------------------------------------------------------------------------------------------
-// until_readable
-//--------------------------------------------------------------------------------------------------
-socket_state_awaiter until_readable(coevent::socket& socket) {
-  return {socket, event::what::read};
-}
-
-//--------------------------------------------------------------------------------------------------
-// until_writable
-//--------------------------------------------------------------------------------------------------
-socket_state_awaiter until_writable(coevent::socket& socket) {
-  return {socket, event::what::write};
-}
 } // namespace coevent

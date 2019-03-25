@@ -24,8 +24,4 @@ class [[nodiscard]] socket_state_awaiter {
 
   static void on_state_change(int file_descriptor, short what, void* context) noexcept;
 };
-
-socket_state_awaiter until_readable(coevent::socket& socket);
-
-socket_state_awaiter until_writable(coevent::socket& socket);
 } // namespace coevent
