@@ -23,7 +23,7 @@ class socket {
     return io_context_;
    }
 
-   int file_descriptor() noexcept { return file_descriptor_; }
+   int file_descriptor() const noexcept { return file_descriptor_; }
 
    void connect(const coevent::endpoint& endpoint);
 
