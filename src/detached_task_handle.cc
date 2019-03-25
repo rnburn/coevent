@@ -1,5 +1,7 @@
 #include "src/detached_task_handle.h"
 
+#include <iostream>
+
 namespace coevent {
 //--------------------------------------------------------------------------------------------------
 // constructor
@@ -13,7 +15,7 @@ detached_task_handle::detached_task_handle(std::experimental::coroutine_handle<>
 // destructor
 //--------------------------------------------------------------------------------------------------
 detached_task_handle::~detached_task_handle() noexcept {
-  finish();
+  std::cout << "yip" << std::endl;
 }
 
 //--------------------------------------------------------------------------------------------------

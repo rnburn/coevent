@@ -46,7 +46,7 @@ io_context& io_context::operator=(io_context&& other) noexcept {
 void io_context::run() {
   assert(handle_ != nullptr);
   auto rcode = event_base_dispatch(static_cast<event_base*>(handle_));
-  if (rcode != 0) {
+  if (rcode == -1) {
     throw std::runtime_error{"event_base_dispatch failed"};
   }
 }

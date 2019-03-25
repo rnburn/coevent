@@ -13,8 +13,7 @@ namespace coevent {
 // constructor
 //--------------------------------------------------------------------------------------------------
 accept_awaiter::accept_awaiter(coevent::socket& socket) noexcept
-  : socket_{socket}
-{}
+    : socket_{socket} {}
 
 //--------------------------------------------------------------------------------------------------
 // await_resume

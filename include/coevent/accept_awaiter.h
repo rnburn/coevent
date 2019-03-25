@@ -10,6 +10,9 @@ class [[nodiscard]] accept_awaiter {
  public:
   explicit accept_awaiter(coevent::socket & socket) noexcept;
 
+  accept_awaiter(const accept_awaiter&) = delete;
+  accept_awaiter(accept_awaiter&&) = delete;
+
   coevent::socket await_resume() const;
 
   bool await_ready() const noexcept { return false; }

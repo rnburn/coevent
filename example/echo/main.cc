@@ -1,4 +1,5 @@
 #include <iostream>
+#include <array>
 #include <cstring>
 
 #include "coevent/write.h"
@@ -6,12 +7,19 @@
 #include "coevent/detached_task.h"
 #include "coevent/detached_task_promise.h"
 
+/* coevent::detached_task process_session(coevent::socket socket) { */
+/*   std::array<char, 500> buffer; */
+/*   while (true) { */
+/*     co_await coevent::until_readable(socket); */
+/*   } */
+/* } */
+
 coevent::detached_task run_server(coevent::socket& socket) {
-  auto new_socket = co_await coevent::accept(socket);
+  co_await std::experimental::suspend_never{};
+  coevent::accept_awaiter awaiter{socket};
+  auto new_socket = co_await awaiter;
   (void)new_socket;
   std::cout << "new connection" << std::endl;
-  /* const char* msg = "abc123"; */
-  /* co_await coevent::write(socket, {msg, std::strlen(msg)}); */
 }
 
 int main() {
