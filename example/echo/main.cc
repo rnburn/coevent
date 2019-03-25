@@ -3,23 +3,29 @@
 #include <cstring>
 
 #include "coevent/write.h"
+#include "coevent/read.h"
 #include "coevent/accept_awaiter.h"
+#include "coevent/socket_state_awaiter.h"
 #include "coevent/detached_task.h"
 #include "coevent/detached_task_promise.h"
 
-/* coevent::detached_task process_session(coevent::socket socket) { */
-/*   std::array<char, 500> buffer; */
-/*   while (true) { */
-/*     co_await coevent::until_readable(socket); */
-/*   } */
-/* } */
+coevent::detached_task process_session(coevent::socket socket) {
+  std::array<char, 500> buffer;
+  while (true) {
+    co_await coevent::until_readable(socket);
+    auto read_result = coevent::read(socket, {buffer.data(), buffer.size()});
+    if (read_result.eof()) {
+      co_return;
+    }
+    co_await coevent::write(socket, {buffer.data(), read_result.num_read()});
+  }
+}
 
-coevent::detached_task run_server(coevent::socket& socket) {
-  co_await std::experimental::suspend_never{};
-  coevent::accept_awaiter awaiter{socket};
-  auto new_socket = co_await awaiter;
-  (void)new_socket;
-  std::cout << "new connection" << std::endl;
+coevent::detached_task run_server(coevent::socket& listener_socket) {
+  while (true) {
+    auto socket = co_await accept(listener_socket);
+    process_session(std::move(socket));
+  }
 }
 
 int main() {
@@ -30,6 +36,5 @@ int main() {
   listen(socket, 10);
   run_server(socket);
   io_context.run();
-  std::cout << "nuf\n";
   return 0;
 }

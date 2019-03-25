@@ -13,6 +13,8 @@ class [[nodiscard]] write_result {
 
    operator size_t() const noexcept { return num_written_; }
 
+   size_t num_written() const noexcept { return num_written_; }
+
    write_awaiter operator co_await() const noexcept;
  private:
   coevent::socket& socket_;

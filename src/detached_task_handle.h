@@ -8,8 +8,6 @@ class detached_task_handle {
  public:
    explicit detached_task_handle(std::experimental::coroutine_handle<> coroutine) noexcept;
 
-   ~detached_task_handle() noexcept;
-
    void finish() noexcept;
  private:
    std::atomic<bool> finished_;
