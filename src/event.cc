@@ -1,5 +1,6 @@
 #include "coevent/event.h"
 
+#include <cassert>
 #include <stdexcept>
 
 #include <event2/event.h>
@@ -41,9 +42,7 @@ event::~event() noexcept {
 // operator=
 //--------------------------------------------------------------------------------------------------
 event& event::operator=(event&& other) noexcept {
-  if (&other == this){ 
-    return *this;
-  }
+  assert(&other != this);
   free();
   handle_ = other.handle_;
   other.handle_ = nullptr;
