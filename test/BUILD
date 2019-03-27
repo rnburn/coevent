@@ -14,6 +14,13 @@ coevent_catch_test(
 )
 
 coevent_catch_test(
+    name = "detached_task_test",
+    srcs = [
+        "detached_task_test.cc",
+    ],
+)
+
+coevent_catch_test(
     name = "task_test",
     srcs = [
         "task_test.cc",

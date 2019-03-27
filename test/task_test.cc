@@ -1,6 +1,5 @@
 #include "coevent/task.h"
 
-#include <iostream>
 #include <stdexcept>
 
 #include "coevent/detached_task.h"
