@@ -1,6 +1,7 @@
 #include "coevent/task.h"
 
 #include <iostream>
+#include <stdexcept>
 
 #include "coevent/detached_task.h"
 #include "3rd_party/catch2/catch.hpp"
@@ -37,5 +38,53 @@ TEST_CASE("task is an awaitable that references the result of a coroutine.") {
     }();
     REQUIRE(value == 0);
     REQUIRE(detached_task.cancel());
+  }
+
+  SECTION(
+      "Exceptions thrown from a task coroutine are propagated up to the "
+      "caller.") {
+    auto f = []() -> coevent::task<int> {
+      throw std::runtime_error{"abc"};
+      co_return 123;
+    };
+
+    [&value, f]() -> coevent::detached_task {
+      try {
+        value = co_await f();
+      } catch (const std::exception& /*e*/) {
+          value = 456;
+      }
+    }();
+
+    REQUIRE(value == 456);
+  }
+
+  SECTION("Void returning tasks are handled via a specialization.") {
+    auto f = [] () -> coevent::task<void> {
+      co_return;
+    };
+    [&value, f] () -> coevent::detached_task {
+      co_await f();
+      value = 123;
+    }();
+    REQUIRE(value == 123);
+  }
+
+  SECTION("Void returning tasks properly propagate exceptions.") {
+    auto f = []() -> coevent::task<void> {
+      throw std::runtime_error{"abc"};
+      co_return;
+    };
+
+    [&value, f]() -> coevent::detached_task {
+      try {
+        co_await f();
+        value = 123;
+      } catch (const std::exception& /*e*/) {
+          value = 456;
+      }
+    }();
+
+    REQUIRE(value == 456);
   }
 }

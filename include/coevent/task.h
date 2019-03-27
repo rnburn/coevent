@@ -39,7 +39,7 @@ class task {
      public:
        using awaiter_base::awaiter_base;
 
-       T& await_resume() const noexcept {
+       T& await_resume() const {
          assert(this->coroutine_ != nullptr);
          return this->coroutine_.promise().result();
        };
@@ -49,7 +49,7 @@ class task {
      public:
        using awaiter_base::awaiter_base;
 
-       T&& await_resume() const noexcept {
+       T&& await_resume() const {
          assert(this->coroutine_ != nullptr);
          return std::move(this->coroutine_.promise().result());
        };
@@ -82,6 +82,7 @@ class task {
      }
      coroutine_ = other.coroutine_;
      other.coroutine_ = nullptr;
+     return *this;
    }
 
    lvalue_awaiter operator co_await() const& noexcept {
@@ -90,6 +91,70 @@ class task {
 
    rvalue_awaiter operator co_await() const&& noexcept {
      return rvalue_awaiter{coroutine_};
+   }
+
+ private:
+   std::experimental::coroutine_handle<promise_type> coroutine_;
+};
+
+template <>
+class task<void> {
+ public:
+   using promise_type = task_promise<void>;
+
+   class awaiter {
+     public:
+        explicit awaiter(std::experimental::coroutine_handle<promise_type> coroutine)
+          : coroutine_{coroutine}
+        {}
+
+        // Awaiter
+        bool await_ready() const noexcept {
+          assert(coroutine_ != nullptr);
+          return coroutine_.done();
+        }
+
+        std::experimental::coroutine_handle<> await_suspend(
+            std::experimental::coroutine_handle<> awaiting_coroutine) const noexcept;
+
+       void await_resume() const;
+
+     protected:
+       std::experimental::coroutine_handle<promise_type> coroutine_;
+   };
+
+   task() noexcept = default;
+
+   task(std::experimental::coroutine_handle<promise_type> coroutine) noexcept
+     : coroutine_{coroutine}
+   {}
+
+   task(const task& other) = delete;
+
+   task(task&& other) noexcept : coroutine_{other.coroutine_} {
+     other.coroutine_ = nullptr;
+   }
+
+   ~task() noexcept {
+     if (coroutine_ != nullptr) {
+       coroutine_.destroy();
+     }
+   }
+
+   task& operator=(const task& other) = delete;
+
+   task& operator=(task&& other) noexcept {
+     assert(&other != this);
+     if (coroutine_ != nullptr) {
+       coroutine_.destroy();
+     }
+     coroutine_ = other.coroutine_;
+     other.coroutine_ = nullptr;
+     return *this;
+   }
+
+   awaiter operator co_await() const noexcept {
+     return awaiter{coroutine_};
    }
 
  private:
@@ -150,5 +215,56 @@ class task_promise {
   private:
    std::experimental::coroutine_handle<> continuation_;
    std::variant<T, std::exception_ptr> result_;
+};
+
+template <>
+class task_promise<void> {
+ public:
+   class final_awaiter {
+    public:
+     // Awaiter
+     bool await_ready() const noexcept { return false; }
+
+     void await_resume() const noexcept {}
+
+     template <class Promise>
+     std::experimental::coroutine_handle<> await_suspend(
+         std::experimental::coroutine_handle<Promise> coroutine) noexcept {
+       return coroutine.promise().continuation_;
+     }
+   };
+
+   void set_continuation(std::experimental::coroutine_handle<> coroutine) noexcept {
+     continuation_ = coroutine;
+   }
+
+   void result() {
+     if (exception_ != nullptr) {
+       std::rethrow_exception(exception_);
+     }
+   }
+
+   // Promise
+   task<void> get_return_object() {
+     return task<void>{std::experimental::coroutine_handle<task_promise>::from_promise(*this)};
+   }
+
+   std::experimental::suspend_always initial_suspend() noexcept {
+     return {};
+   }
+
+   final_awaiter final_suspend() noexcept {
+     return {};
+   }
+
+   void return_void() const noexcept {}
+
+   void unhandled_exception() noexcept {
+     exception_ = std::current_exception();
+   }
+
+  private:
+   std::experimental::coroutine_handle<> continuation_;
+   std::exception_ptr exception_;
 };
 } // namespace coevent
