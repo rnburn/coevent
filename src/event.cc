@@ -5,7 +5,23 @@
 
 #include <event2/event.h>
 
+#include <sys/time.h>
+
 namespace coevent {
+//--------------------------------------------------------------------------------------------------
+// to_timeval
+//--------------------------------------------------------------------------------------------------
+static timeval to_timeval(std::chrono::microseconds microseconds) {
+  timeval result;
+  auto num_microseconds = microseconds.count();
+  const size_t microseconds_in_second = 1000000;
+  result.tv_sec =
+      static_cast<time_t>(num_microseconds / microseconds_in_second);
+  result.tv_usec =
+      static_cast<suseconds_t>(num_microseconds % microseconds_in_second);
+  return result;
+}
+
 //--------------------------------------------------------------------------------------------------
 // what
 //--------------------------------------------------------------------------------------------------
@@ -54,6 +70,14 @@ event& event::operator=(event&& other) noexcept {
 //--------------------------------------------------------------------------------------------------
 void event::activate() {
   auto rcode = event_add(static_cast<::event*>(handle_), nullptr);
+  if (rcode != 0) {
+    throw std::runtime_error{"event_add failed"};
+  }
+}
+
+void event::activate(std::chrono::microseconds timeout) {
+  auto tv = to_timeval(timeout);
+  auto rcode = event_add(static_cast<::event*>(handle_), &tv);
   if (rcode != 0) {
     throw std::runtime_error{"event_add failed"};
   }

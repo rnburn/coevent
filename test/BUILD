@@ -26,3 +26,10 @@ coevent_catch_test(
         "task_test.cc",
     ],
 )
+
+coevent_catch_test(
+    name = "sleep_test",
+    srcs = [
+        "sleep_test.cc",
+    ],
+)

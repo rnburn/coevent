@@ -6,7 +6,7 @@
 
 TEST_CASE(
     "Detached tasks support invoking coroutines that run detached from the "
-    "point of invokation.") {
+    "point of invocation.") {
 
   SECTION("Detached task free their resources when completed.") {
     auto handle = [] () -> coevent::detached_task {

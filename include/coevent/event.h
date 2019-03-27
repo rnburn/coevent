@@ -1,5 +1,7 @@
 #pragma once
 
+#include <chrono>
+
 #include "coevent/io_context.h"
 
 namespace coevent {
@@ -28,6 +30,13 @@ class event {
    event& operator=(event&& other) noexcept;
 
    void activate();
+
+   void activate(std::chrono::microseconds timeout);
+
+   template <class Rep, class Period>
+   void activate(std::chrono::duration<Rep, Period> timeout) {
+     return activate(std::chrono::duration_cast<std::chrono::microseconds>(timeout));
+   }
 
    void deactivate();
 
