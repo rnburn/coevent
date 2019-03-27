@@ -1,7 +1,5 @@
 #include "coevent/endpoint.h"
 
-#include <compare>
-
 #include "3rd_party/catch2/catch.hpp"
 
 TEST_CASE("Endpoint manages an IP address and port.") {

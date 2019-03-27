@@ -30,7 +30,8 @@ class task {
           coroutine_.promise().set_continuation(awaiting_coroutine);
           return coroutine_;
         }
-     private:
+
+     protected:
        std::experimental::coroutine_handle<promise_type> coroutine_;
    };
 
@@ -39,7 +40,7 @@ class task {
        using awaiter_base::awaiter_base;
 
        T& await_resume() const noexcept {
-         assert(coroutine_ != nullptr);
+         assert(this->coroutine_ != nullptr);
          return this->coroutine_.promise().result();
        };
    };
@@ -49,22 +50,30 @@ class task {
        using awaiter_base::awaiter_base;
 
        T&& await_resume() const noexcept {
-         assert(coroutine_ != nullptr);
+         assert(this->coroutine_ != nullptr);
          return std::move(this->coroutine_.promise().result());
        };
    };
 
    task() noexcept = default;
 
-   task(std::experimental::coroutine_handle<> coroutine) noexcept
+   task(std::experimental::coroutine_handle<promise_type> coroutine) noexcept
      : coroutine_{coroutine}
    {}
+
+   task(const task& other) = delete;
+
+   task(task&& other) noexcept : coroutine_{other.coroutine_} {
+     other.coroutine_ = nullptr;
+   }
 
    ~task() noexcept {
      if (coroutine_ != nullptr) {
        coroutine_.destroy();
      }
    }
+
+   task& operator=(const task& other) = delete;
 
    task& operator=(task&& other) noexcept {
      assert(&other != this);
@@ -84,7 +93,7 @@ class task {
    }
 
  private:
-   std::experimental::coroutine_handle<> coroutine_;
+   std::experimental::coroutine_handle<promise_type> coroutine_;
 };
 
 template <class T>
@@ -109,7 +118,7 @@ class task_promise {
    }
 
    T& result() {
-      if(auto result = std::get_if<0>(result_); result != nullptr) {
+      if(auto result = std::get_if<0>(&result_); result != nullptr) {
         return *result;
       }
       std::rethrow_exception(std::get<1>(result_));
@@ -129,9 +138,9 @@ class task_promise {
      return {};
    }
 
-   template <class U, typename std::enable_if_t<std::is_convertible_v<U&&, T>>>
+   template <class U, typename std::enable_if_t<std::is_convertible_v<U&&, T>, int> = 0 >
    void return_value(U&& u) noexcept(std::is_nothrow_constructible_v<T, U&&>) {
-     result_.emplace<0>(std::forward<U>(u));
+     result_.template emplace<0>(std::forward<U>(u));
    }
 
    void unhandled_exception() noexcept {

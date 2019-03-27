@@ -12,10 +12,11 @@ detached_task_handle::detached_task_handle(std::experimental::coroutine_handle<>
 //--------------------------------------------------------------------------------------------------
 // finish
 //--------------------------------------------------------------------------------------------------
-void detached_task_handle::finish() noexcept {
+bool detached_task_handle::finish() noexcept {
   if(finished_.exchange(true)) {
-    return;
+    return false;
   }
   coroutine_.destroy();
+  return true;
 }
 } // namespace coevent

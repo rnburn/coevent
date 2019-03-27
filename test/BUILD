@@ -12,3 +12,10 @@ coevent_catch_test(
         "endpoint_test.cc",
     ],
 )
+
+coevent_catch_test(
+    name = "task_test",
+    srcs = [
+        "task_test.cc",
+    ],
+)

@@ -13,7 +13,7 @@ class detached_task {
 
    explicit detached_task(std::shared_ptr<detached_task_handle> handle);
 
-   void cancel() noexcept;
+   bool cancel() noexcept;
  private:
    std::shared_ptr<detached_task_handle> handle_;
 };

@@ -13,7 +13,7 @@ detached_task::detached_task(std::shared_ptr<detached_task_handle> handle)
 //--------------------------------------------------------------------------------------------------
 // cancel
 //--------------------------------------------------------------------------------------------------
-void detached_task::cancel() noexcept {
-  handle_->finish();
+bool detached_task::cancel() noexcept {
+  return handle_->finish();
 }
 } // namespace coevent
