@@ -8,7 +8,7 @@
 #include "coevent/state.h"
 #include "coevent/detached_task.h"
 
-coevent::detached_task process_session(coevent::socket socket) {
+static coevent::detached_task process_session(coevent::socket socket) {
   std::array<char, 500> buffer;
   while (true) {
     co_await coevent::until_readable(socket);
@@ -20,7 +20,7 @@ coevent::detached_task process_session(coevent::socket socket) {
   }
 }
 
-coevent::detached_task run_server(coevent::socket& listener_socket) {
+static coevent::detached_task run_server(coevent::socket& listener_socket) {
   while (true) {
     auto socket = co_await accept(listener_socket);
     process_session(std::move(socket));

@@ -38,8 +38,9 @@ coevent::read_result read(coevent::socket& socket,
       oss << "read failed: " << std::strerror(errno);
       throw std::runtime_error{oss.str()};
     }
-    eof = true;
     rcode = 0;
+  } else if (rcode == 0) {
+    eof = true;
   }
   return read_result{socket, data, static_cast<size_t>(rcode), eof};
 }

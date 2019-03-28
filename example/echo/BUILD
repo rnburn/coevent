@@ -7,10 +7,17 @@ load(
 coevent_package()
 
 coevent_cc_binary(
-    name = "echo",
-    srcs = ["main.cc"],
+    name = "server",
+    srcs = ["server.cc"],
     deps = [
         "//:coevent_lib",
     ],
 )
 
+coevent_cc_binary(
+    name = "client",
+    srcs = ["client.cc"],
+    deps = [
+        "//:coevent_lib",
+    ],
+)
