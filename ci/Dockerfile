@@ -1,4 +1,4 @@
-FROM clang
+FROM rnburn/clang
 
 WORKDIR /3rd_party
 

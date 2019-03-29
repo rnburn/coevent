@@ -64,6 +64,7 @@ genrule(
       cp -R $$(dirname $(location :README.md))/* $$TMP_DIR
       cd $$TMP_DIR
       cmake \
+        -DCMAKE_C_COMPILER=/usr/bin/gcc \
         -DCMAKE_INSTALL_PREFIX="$$INSTALL_DIR" \
         -DCMAKE_POSITION_INDEPENDENT_CODE=on \
         -DEVENT__DISABLE_OPENSSL:BOOL=on \

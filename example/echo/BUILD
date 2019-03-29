@@ -21,3 +21,14 @@ coevent_cc_binary(
         "//:coevent_lib",
     ],
 )
+
+sh_test(
+    name = "echo_test",
+    srcs = [
+        "echo_test.sh",
+    ],
+    data = [
+        ":server",
+        ":client",
+    ],
+)
