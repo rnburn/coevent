@@ -15,7 +15,7 @@ TEST_CASE(
     REQUIRE(!handle.cancel());
   }
 
-  SECTION("Suspended detached tasks can be canceld from their handle.") {
+  SECTION("Suspended detached tasks can be canceled from their handle.") {
     auto handle = [] () -> coevent::detached_task {
       co_await std::experimental::suspend_always{};
     }();
