@@ -1,32 +1,48 @@
-# Prerequisites
-*.d
-
-# Compiled Object files
-*.slo
-*.lo
 *.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
+*.lo
+*~
+*.dSYM
+Makefile.in
+aclocal.m4
+autom4te.cache
+compile
+config.guess
+config.sub
+configure
+depcomp
+install-sh
+ltmain.sh
+missing
+Makefile.in
+.deps
+.libs
+lt*.m4
+libtool.m4
+Makefile
+config.log
+config.status
+libtool
+Makefile
+config.h
 *.la
-*.a
-*.lib
+.dirstamp
+stamp-h1
+tracer_test
+carrier_test
+cppclient
+flushproto_test
+*.pb.h
+*.pb.cc
+*.stamp
+test-driver
+*.log
+*.trs
+linux
+*.gch
 
-# Executables
-*.exe
-*.out
-*.app
+# Ignore all bazel-* symlinks. There is no full list since this can change
+# based on the name of the directory bazel is cloned into.bazel-*
+/bazel-*
+
+# compilation database
+compile_commands.json
