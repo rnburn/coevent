@@ -76,4 +76,28 @@ int main() {
 }
 ```
 
-See [example/echo](example/echo) for full example.
+See [example/echo](example/echo) for the full example.
+
+## Installation
+
+coevent requires [libevent](https://libevent.org/) and a C++ compiler that supports coroutines.
+(Tested against clang-9).
+
+```
+$ mkdir .build
+$ cd .build
+# For clang use libc++ instead of libstdc++
+$ cmake -DCMAKE_CXX_FLAGS="-stdlib=libc++" ..
+$ make
+$ sudo make install
+```
+
+The docker image [rnburn/clang](https://hub.docker.com/r/rnburn/clang) contains a version of clang
+suitable for building the library and the script [ci/run_coevent_docker.sh](ci/run_coevent_docker.sh)
+can be used to spin up a docker environment that builds the project.
+
+```
+$ ./ci/run_coevent_docker.sh
+# bazel build //...
+# bazel test //...
+```
