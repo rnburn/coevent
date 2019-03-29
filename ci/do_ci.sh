@@ -34,11 +34,10 @@ elif [[ "$1" == "bazel.tsan" ]]; then
         //...
   exit 0
 elif [[ "$1" == "cmake" ]]; then
-  mkdir /build-cmake
-  cd /build-cmake
+  cd ${BUILD_DIR}
   cmake -DCMAKE_CXX_COMPILER=/usr/local/bin/clang++ \
         -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
-        /src
+        ${SRC_DIR}
   make
   make install
 fi

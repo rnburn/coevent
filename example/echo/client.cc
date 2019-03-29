@@ -41,4 +41,3 @@ int main() {
   io_context.run();
   return 0;
 }
-
