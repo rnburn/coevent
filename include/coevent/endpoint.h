@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include <compare>
 
 #include <sys/socket.h>
 

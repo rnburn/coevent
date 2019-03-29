@@ -33,4 +33,12 @@ elif [[ "$1" == "bazel.tsan" ]]; then
         --linkopt=-fsanitize=thread \
         //...
   exit 0
+elif [[ "$1" == "cmake" ]]; then
+  mkdir /build
+  cd /build
+  cmake -DCMAKE_CXX_COMPILER=/usr/local/bin/clang++ \
+        -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
+        /src
+  make
+  make install
 fi
