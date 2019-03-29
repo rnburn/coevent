@@ -1,6 +1,6 @@
 # coevent
 
-A C++ coroutine library for asynchronous networking. (Based off of libevent).
+A C++ coroutine library for asynchronous networking. (Based off of [libevent](https://libevent.org/)).
 
 ## Quick Start
 
